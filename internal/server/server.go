@@ -9,18 +9,26 @@ import (
 )
 
 type MorseServer struct {
-	Logger *log.Logger
-	Server http.Server
+	logger *log.Logger
+	server http.Server
 }
 
-func Create(logger *log.Logger) *MorseServer {
+func (m *MorseServer) Start() error {
+	return m.server.ListenAndServe()
+}
+
+func (m *MorseServer) Logger() *log.Logger {
+	return m.logger
+}
+
+func New(logger *log.Logger) *MorseServer {
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", handlers.HandleIndex)
-	mux.HandleFunc("/upload", handlers.HandleUpload)
+	mux.HandleFunc("GET /", handlers.HandleIndex)
+	mux.HandleFunc("POST /upload", handlers.HandleUpload)
 
 	return &MorseServer{
-		Logger: logger,
-		Server: http.Server{
+		logger: logger,
+		server: http.Server{
 			Addr:         ":8080",
 			Handler:      mux,
 			ErrorLog:     logger,

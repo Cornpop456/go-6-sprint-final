@@ -10,11 +10,11 @@ import (
 func main() {
 	logger := log.New(os.Stdout, "http", log.LstdFlags)
 
-	morseServer := server.Create(logger)
+	morseServer := server.New(logger)
 
-	err := morseServer.Server.ListenAndServe()
+	err := morseServer.Start()
 
 	if err != nil {
-		morseServer.Logger.Fatal(err)
+		morseServer.Logger().Fatal(err)
 	}
 }
